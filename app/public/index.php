@@ -1,8 +1,7 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $errors = [];
     $conn = new PDO(dsn: 'pgsql:host=db;dbname=dbname', username: 'dbuser', password: 'dbpwd');
-    $errors = isValid($_POST,$conn);
+    $errors = isValid($_POST, $conn);
 
     if (empty($errors)) {
         $name = $_POST['name'];
@@ -19,10 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         print_r('name=' . $resul['name']);
         print_r('<br>');
         print_r('email=' . $resul['email']);
-
     }
+}
 
-    function isValid(array $data,PDO $conn) :array{
+    function isValid(array $data,PDO $conn) :array {
         $errors = [];
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -63,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $errors['passwordp'] = 'password не совпадает';
         }
 
-
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute(['email' => $email]);
         $userData = $stmt->fetch();
@@ -72,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         }
        return $errors;
     }
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru" dir="ltr">
