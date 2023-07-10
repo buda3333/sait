@@ -9,6 +9,7 @@ elseif ($requetUri === '/login') {
     require_once './handlers/login.php';
 }
 elseif ($requetUri === '/main') {
+    session_start();
     require_once './htmlcod/main.html';
 }
 else {

@@ -1,16 +1,25 @@
 <?php
-
-session_start();
 if (!isset($_SESSION['user'])) {
     header('Location: /login');
 }
-
-$conn = new PDO('pgsql:host=db;dbname=dbname', 'dbuser', 'dbpwd');
-$stmt = $conn->query("SELECT * FROM tovary")->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<label style="color: red"> <?php
-                echo $_SESSION['user']['email'];
-                ?></label>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Моя страница</title>
+</head>
+<body>
+<h1>Добро пожаловать на мою страницу!</h1>
+
+<?php
+$email = $_SESSION['user']['email'];
+echo "<p>Почта: $email</p>";
+
+?>
+
+</body>
+</html>
 <div class="container">
     <h3>Catalog</h3>
     <div class="card-deck">
@@ -19,7 +28,7 @@ $stmt = $conn->query("SELECT * FROM tovary")->fetchAll(PDO::FETCH_ASSOC);
                 <div class="card-header">
                     Hit!
                 </div>
-                <img class="card-img-top" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ&s=043d89cbf03cbdbbe8ed9f9e5e44ce6f" alt="Card image">
+                <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFic9BWYEKRghEE73ikRXrRirtLZbIfHI7Uw&usqp=CAU" alt="Card image">
                 <div class="card-body">
                     <p class="card-text text-muted">Category name</p>
                     <a href="#"><h5 class="card-title">Very long item name</h5></a>
@@ -34,7 +43,7 @@ $stmt = $conn->query("SELECT * FROM tovary")->fetchAll(PDO::FETCH_ASSOC);
                 <div class="card-header">
                     Hit!
                 </div>
-                <img class="card-img-top" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ&s=043d89cbf03cbdbbe8ed9f9e5e44ce6f" alt="Card image">
+                <img class="card-img-top" src="data:image/jpeg;base64,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" alt="Card image">
                 <div class="card-body">
                     <p class="card-text text-muted">Category name</p>
                     <a href="#"><h5 class="card-title">Very long item name</h5></a>
