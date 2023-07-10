@@ -4,10 +4,13 @@ session_start();
 if (!isset($_SESSION['user'])) {
     header('Location: /login');
 }
-$_SERVER['REMOTE_ADDR'];
-$_SERVER['HTTP_USER_AGENT'];
 
+$conn = new PDO('pgsql:host=db;dbname=dbname', 'dbuser', 'dbpwd');
+$stmt = $conn->query("SELECT * FROM tovary")->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<label style="color: red"> <?php
+                echo $_SESSION['user']['email'];
+                ?></label>
 <div class="container">
     <h3>Catalog</h3>
     <div class="card-deck">
@@ -73,13 +76,64 @@ $_SERVER['HTTP_USER_AGENT'];
         </div>
     </div>
 </div>
+
 <style>
+
     body {
-        font-style: sans-serif;
+        background-color: #f6f7f8;
+    }
+
+    /* основные стили */
+    .profile {
+        display: flex;
+    }
+
+    /* общие стили для всех кнопок авторизации, включая кнопки входа, корорые были на макете главной */
+    .profile-button {
+        background-color: #faf8f8;
+        padding: 12px;
+        font-size: 21px;
+        line-height: 21px;
+        text-decoration: none;
+        color: #000;
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-button:hover .profile-icon path{
+        fill: #3d546f;
+    }
+
+    .profile-button:active {
+        color: #c5c5c5;
+    }
+
+    .profile-button:active .profile-icon path{
+        fill: #da1010;
+    }
+
+    /* стили отдельных элементов */
+    .client-name {
+        padding-left: 15px;
+        padding-right: 10px;
+    }
+
+    .client-name .profile-icon {
+        margin-right: 21px;
+    }
+
+    .profile-exit {
+        padding-right: 10px;
+        padding-left: 17px;
+    }
+
+    body {
+        font-style: normal;
     }
 
     a {
         text-decoration: none;
+        font-size: 23px;
     }
 
     a:hover {
@@ -88,12 +142,15 @@ $_SERVER['HTTP_USER_AGENT'];
 
     h3 {
         line-height: 3em;
+        text-align: center;
     }
 
     .card {
-        float: left;
+        float: left; /*Задаем обтекание*/
         margin-right: 20px;
         margin-left: 35px;
+
+
     }
 
     .card:hover {
@@ -108,7 +165,7 @@ $_SERVER['HTTP_USER_AGENT'];
     }
 
     .text-muted {
-        font-size: 11px;
+        font-size: 22px;
     }
 
     .card-footer{
@@ -116,4 +173,5 @@ $_SERVER['HTTP_USER_AGENT'];
         font-size: 18px;
         background-color: white;
     }
+
 </style>

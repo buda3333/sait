@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         {
             session_start();
             $_SESSION['user'] = ['email' => $userData['email']];
-            header('Location: ./main');
+            header('Location: /main');
         } else {
             $errorsLogin['errors'] = '* Неверный пароль';
         }
