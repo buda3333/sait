@@ -2,13 +2,17 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Моя страница</title>
+    <title>Спецтехника</title>
 </head>
 <body>
 <h1>Добро пожаловать на страницу!</h1>
 <?php
-$email = $_SESSION['user']['email'];
-echo "<p>Почта: $email</p>";
+if(isset($_COOKIE['username'])){
+    $username = $_COOKIE['username'];
+    echo "Привет, $username!";
+} else {
+    echo "Привет, гость!";
+};
 ?>
 </body>
 </html>

@@ -6,10 +6,13 @@ if ($requetUri === '/signup') {
 } elseif ($requetUri === '/login') {
     require_once './handlers/login.php';
 } elseif ($requetUri === '/main') {
-    session_start();
-    if (!isset($_SESSION['user'])) {
+    //session_start();
+    //if (!isset($_SESSION['user'])) {
+    if(isset($_COOKIE['username'])){
+        require_once './handlers/main.php';
+    } else {
         header('Location: /login');
-    } require_once './handlers/main.php';
+    }
 } else {
     require_once './htmlcod/notFound.html';
 }

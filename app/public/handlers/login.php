@@ -9,10 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute(['email' => $email]);
         $userData = $stmt->fetch();
-        if (!empty($userData) && (password_verify($password, $userData['password'])))
-        {
-            session_start();
-            $_SESSION['user'] = ['email' => $userData['email']];
+        if (empty($userData)) {
+            $errors['email'] = 'Пользователь не зарегестрирован c таким email';
+        } elseif (!empty($userData) && (password_verify($password, $userData['password']))) {
+            //session_start();
+            //$_SESSION['user'] = ['email' => $userData['email']];
+            setcookie('username',$userData['name'], time() + 3600); // Срок действия: 1 час
             header('Location: /main');
         } else {
             $errorsLogin['errors'] = '* Неверный пароль';
@@ -23,28 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     require_once './htmlcod/login.html';
 function isValidLogin(array $data,PDO $conn) :array {
     $errors = [];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
 
-    if (!isset($email)) {
+    if (!isset($data['email'])) {
         $errors['email'] = 'email is required';
-    }
-    if (empty($email)) {
+    } elseif (empty($data['email'])) {
         $errors['email'] = 'email не доджно быть пустой';
     }
 
-    if (!isset($password)) {
+    if (!isset($data['password'])) {
         $errors['password'] = 'password is required';
-    }
-    if (empty($password)) {
+    } elseif (empty($data['password'])) {
         $errors['password'] = 'password не доджно быть пустой';
-    }
-
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
-    $stmt->execute(['email' => $email]);
-    $userData = $stmt->fetch();
-    if (empty($userData)) {
-        $errors['email'] = 'Пользователь не зарегестрирован c таким email';
     }
     return $errors;
 }
