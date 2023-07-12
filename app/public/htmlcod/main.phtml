@@ -7,12 +7,7 @@
 <body>
 <h1>Добро пожаловать на страницу!</h1>
 <?php
-if(isset($_COOKIE['username'])){
-    $username = $_COOKIE['username'];
-    echo "Привет, $username!";
-} else {
-    echo "Привет, гость!";
-};
+ echo "Привет, $username!";
 ?>
 </body>
 </html>
@@ -32,6 +27,10 @@ if(isset($_COOKIE['username'])){
                     <div class="card-footer">
                         <?php echo $product['price'];?>
                     </div>
+                    <form action="/addProduct" method="POST">
+                        <input type="hidden" name="product_id" value="<?php echo $product['id'];?>">
+                        <input type="submit" value="Добавить в корзину">
+                    </form>
                 </div>
             </a>
         </div>
