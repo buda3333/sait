@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $errors['email'] = 'Пользователь не зарегестрирован c таким email';
         } elseif (!empty($userData) && (password_verify($password, $userData['password']))) {
             session_start();
-            $_SESSION['user_id'] = ['id' => $userData['id'], 'email' => $userData['email']];
+            $_SESSION['user_id'] = $userData['id'];
+            $_SESSION['email'] = $userData['email'];
             //setcookie('username',$userData['name'], time() + 3600); // Срок действия: 1 час
             header('Location: /main');
         } else {

@@ -9,6 +9,8 @@ if ($requetUri === '/signup') {
     require_once './handlers/main.php';
 } elseif ($requetUri === '/addProduct') {
     require_once './handlers/addProduct.php';
+}elseif ($requetUri === '/get_cart') {
+    require_once './handlers/get_cart.php';
 }else {
     require_once './htmlcod/notFound.html';
 }

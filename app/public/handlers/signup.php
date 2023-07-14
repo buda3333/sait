@@ -18,15 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         } else {
             $stmt = $conn->prepare("INSERT INTO users(name,email,password) VALUES (:name,:email,:password)");
             $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
+            header('Location: /login');
 
-            $stmt = $conn->prepare("SELECT * FROM users WHERE name = :name");
+             /*$stmt = $conn->prepare("SELECT * FROM users WHERE name = :name");
             $stmt->execute(['name' => $name]);
             $resul = $stmt->fetch();
             print_r('id=' . $resul['id']);
             print_r('<br>');
             print_r('name=' . $resul['name']);
             print_r('<br>');
-            print_r('email=' . $resul['email']);
+            print_r('email=' . $resul['email']);*/
         }
     }
 }

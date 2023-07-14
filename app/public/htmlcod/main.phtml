@@ -9,6 +9,8 @@
 <?php
  echo "Привет, $username!";
 ?>
+<!--<button onclick="/get_cart">Открыть корзину</button>-->
+<a href="/get_cart" class="register-link">Корзина</a>
 </body>
 </html>
 <div class="container">
@@ -29,6 +31,7 @@
                     </div>
                     <form action="/addProduct" method="POST">
                         <input type="hidden" name="product_id" value="<?php echo $product['id'];?>">
+                        <input type="number" name="quantity" value="1">
                         <input type="submit" value="Добавить в корзину">
                     </form>
                 </div>
