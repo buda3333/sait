@@ -1,7 +1,39 @@
+<!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Корзина</title>
+                </head>
+                <body>
+                <h1>Корзина</h1>
+                <table>
+                    <tr>
+                        <th>Имя товара</th>
+                        <th>Количество</th>
+                        <th>Общая сумма</th>
+                    </tr>
+                    <?php foreach ($result as $res):?>
+                        <tr>
+                            <td><?php echo $res['name']; ?></td>
+                            <td><?php echo $res['quantity']; ?></td>
+                            <td><?php echo $res['total_price']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+                </body>
+                <a href="/main" class="register-link">Назад</a>
+                </html>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-                <?php foreach ($result as $row): ?>
-               <?php echo $row['product_id'];?>
-                    <?php echo $row['quantity'];?>
-                    <?php echo $row['product_id'];?>
-                        <?php endforeach; ?>
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
 
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
