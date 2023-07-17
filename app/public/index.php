@@ -2,16 +2,26 @@
 $requetUri=$_SERVER["REQUEST_URI"];
 
 if ($requetUri === '/signup') {
-    require_once './handlers/signup.php';
+    require_once '../Controller/UserController.php';
+        $object = new UserController();
+        $object->signup();
 } elseif ($requetUri === '/login') {
-    require_once './handlers/login.php';
+    require_once '../Controller/UserController.php';
+    $object = new UserController();
+    $object->login();
 } elseif ($requetUri === '/main') {
-    require_once './handlers/main.php';
+    require_once '../Controller/MainController.php';
+    $object = new MainController();
+    $object->main();
 } elseif ($requetUri === '/addProduct') {
-    require_once './handlers/addProduct.php';
+    require_once '../Controller/CartController.php';
+    $object = new CartController();
+    $object->addProduct();
 }elseif ($requetUri === '/getCart') {
-    require_once './handlers/getCart.php';
+    require_once '../Controller/CartController.php';
+    $object = new CartController();
+    $object->getCart();
 }else {
-    require_once './htmlcod/notFound.html';
+    require_once '../View/notFound.html';
 }
 ?>
