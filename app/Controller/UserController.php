@@ -1,31 +1,62 @@
 <?php
 class UserController {
-    public function signup(){
-    if ($_SERVER['REQUEST_METHOD'] === "POST") {
-        $conn = new PDO(dsn: 'pgsql:host=db;dbname=dbname', username: 'dbuser', password: 'dbpwd');
-        $errors = isValid($_POST, $conn);
+    public function signup()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
+            $errors = $this->isValid($_POST);
 
-        if (empty($errors)) {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $password = password_hash($password, PASSWORD_DEFAULT);
+            if (empty($errors)) {
 
-            $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
-            $stmt->execute(['email' => $email]);
-            $userData = $stmt->fetch();
-            if (!empty($userData)) {
-                $errors['email'] = 'Пользователь зарегестрирован c таким email';
-            } else {
-                $stmt = $conn->prepare("INSERT INTO users(name,email,password) VALUES (:name,:email,:password)");
-                $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
+                session_start();
                 header('Location: /login');
+
+                $password = $_POST['password'];
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+
+                require_once "../Model/User.php";
+                $user = new User();
+                $user->save($_POST['name'], $_POST['email'], $hash);
+
             }
         }
+        session_start();
+        if (isset($_SESSION['user_id'])) {
+            header('Location: /main');
+        }
+        require_once '../View/signup.html';
     }
-    require_once '../View/signup.html';
-    function isValid(array $data) :array {
+    public function login(){
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $errors = $this->isValidLogin($_POST);
+            if (empty($errors)) {
+                $password = $_POST['password'];
+                require_once "../Model/User.php";
+                $user = new User();
+                $userData = $user->get($_POST['email']);
+                if (empty($userData)) {
+                    $errors['email'] = 'Пользователь не зарегестрирован c таким email';
+                } elseif (!empty($userData) && (password_verify($password, $userData['password']))) {
+                    session_start();
+                    $_SESSION['user_id'] = $userData['id'];
+                    $_SESSION['email'] = $userData['email'];
+                    //setcookie('username',$userData['name'], time() + 3600); // Срок действия: 1 час
+                    header('Location: /main');
+                } else {
+                    $errorsLogin['errors'] = '* Неверный пароль';
+                }
+            }
+        }
+        require_once '../View/login.html';
+    }
+    public function logout()
+    {
+        session_start();
+
+        unset($_SESSION['user_id']);
+        header('Location: /login');
+    }
+    private function isValid(array $data) :array {
         $errors = [];
 
         if (!isset($data['name'])) {
@@ -57,49 +88,21 @@ class UserController {
         }
         return $errors;
     }
-}
-    public function login()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            $conn = new PDO(dsn: 'pgsql:host=db;dbname=dbname', username: 'dbuser', password: 'dbpwd');
-            $errors = isValidLogin($_POST, $conn);
+    private function isValidLogin(array $data) :array {
+        $errors = [];
 
-            if (empty($errors)) {
-                $email = $_POST['email'];
-                $password = $_POST['password'];
-                $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
-                $stmt->execute(['email' => $email]);
-                $userData = $stmt->fetch();
-                if (empty($userData)) {
-                    $errors['email'] = 'Пользователь не зарегестрирован c таким email';
-                } elseif (!empty($userData) && (password_verify($password, $userData['password']))) {
-                    session_start();
-                    $_SESSION['user_id'] = $userData['id'];
-                    $_SESSION['email'] = $userData['email'];
-                    //setcookie('username',$userData['name'], time() + 3600); // Срок действия: 1 час
-                    header('Location: /main');
-                } else {
-                    $errorsLogin['errors'] = '* Неверный пароль';
-                }
-
-            }
+        if (!isset($data['email'])) {
+            $errors['email'] = 'email is required';
+        } elseif (empty($data['email'])) {
+            $errors['email'] = 'email не доджно быть пустой';
         }
-        require_once '../View/login.html';
-        function isValidLogin(array $data,PDO $conn) :array {
-            $errors = [];
 
-            if (!isset($data['email'])) {
-                $errors['email'] = 'email is required';
-            } elseif (empty($data['email'])) {
-                $errors['email'] = 'email не доджно быть пустой';
-            }
-
-            if (!isset($data['password'])) {
-                $errors['password'] = 'password is required';
-            } elseif (empty($data['password'])) {
-                $errors['password'] = 'password не доджно быть пустой';
-            }
-            return $errors;
+        if (!isset($data['password'])) {
+            $errors['password'] = 'password is required';
+        } elseif (empty($data['password'])) {
+            $errors['password'] = 'password не доджно быть пустой';
         }
+        return $errors;
     }
 }
+?>
