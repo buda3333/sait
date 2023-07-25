@@ -20,6 +20,9 @@ if ($requetUri === '/signup') {
 } elseif ($requetUri === '/login') {
     $object = new UserController();
     $object->login();
+}elseif ($requetUri === '/logout') {
+    $object = new UserController();
+    $object->logout();
 } elseif ($requetUri === '/main') {
     $object = new MainController();
     $object->main();
