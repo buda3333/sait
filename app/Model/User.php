@@ -22,4 +22,12 @@ class User
         $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
 
     }
+    public function exists(string $email): bool
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+        $count = $stmt->fetchColumn();
+
+        return $count > 0;
+    }
 }

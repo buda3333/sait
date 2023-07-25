@@ -2,8 +2,7 @@
 namespace App\Controller;
 use App\Model\User;
 class UserController {
-    public function signup()
-    {
+    public function signup() {
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
             $errors = $this->isValid($_POST);
@@ -13,11 +12,15 @@ class UserController {
                 session_start();
                 header('Location: /login');
 
-                $password = $_POST['password'];
-                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $email = $_POST['email'];
                 $user = new User();
-                $user->save($_POST['name'], $_POST['email'], $hash);
-
+                if ($user->exists($email)) {
+                    $errors['email'] = "Email already exists";
+                } else {
+                    $password = $_POST['password'];
+                    $hash = password_hash($password, PASSWORD_DEFAULT);
+                    $user->save($_POST['name'], $email, $hash);
+                }
             }
         }
         session_start();
