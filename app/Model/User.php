@@ -1,10 +1,12 @@
 <?php
+namespace App\Model;
+use PDO;
+use App\Model\ConnectFactory;
 class User
 {
     private PDO $conn;
     public function __construct()
     {
-        require_once "../Model/ConnectBD.php";
         $this->conn = ConnectFactory::create();
     }
     public function get(string $email):array|false

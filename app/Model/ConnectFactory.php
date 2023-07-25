@@ -1,5 +1,6 @@
 <?php
-
+namespace App\Model;
+use PDO;
 class ConnectFactory
 {
     private static PDO $conn;

@@ -1,11 +1,12 @@
 <?php
-
+namespace App\Model;
+use App\Model\ConnectFactory;
+use PDO;
 class Product
 {
     private PDO $conn;
     public function __construct()
     {
-        require_once "../Model/ConnectBD.php";
         $this->conn = ConnectFactory::create();
     }
     public function getAll():array

@@ -1,4 +1,6 @@
 <?php
+namespace App\Controller;
+use App\Model\User;
 class UserController {
     public function signup()
     {
@@ -13,8 +15,6 @@ class UserController {
 
                 $password = $_POST['password'];
                 $hash = password_hash($password, PASSWORD_DEFAULT);
-
-                require_once "../Model/User.php";
                 $user = new User();
                 $user->save($_POST['name'], $_POST['email'], $hash);
 
@@ -31,7 +31,6 @@ class UserController {
             $errors = $this->isValidLogin($_POST);
             if (empty($errors)) {
                 $password = $_POST['password'];
-                require_once "../Model/User.php";
                 $user = new User();
                 $userData = $user->get($_POST['email']);
                 if (empty($userData)) {

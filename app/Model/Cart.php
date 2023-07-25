@@ -1,14 +1,15 @@
 <?php
-
+namespace App\Model;
+use PDO;
+use App\Model\ConnectFactory;
 class Cart
 {
     private PDO $conn;
     public function __construct()
     {
-        require_once "../Model/ConnectBD.php";
         $this->conn = ConnectFactory::create();
     }
-    public function addProducts(int $userId, int $productId, int $quantity): void
+    public function addProduct(int $userId, int $productId, int $quantity): void
     {
         $stmt = $this->conn->prepare("INSERT INTO carts (user_id, product_id, quantity) VALUES (:user_id, :product_id, :quantity)
     ON CONFLICT (user_id, product_id) DO UPDATE SET quantity = carts.quantity + $quantity");
