@@ -3,6 +3,11 @@ namespace App\Controller;
 use App\Model\User;
 class UserController
 {
+    private User $user;
+    public function __construct()
+    {
+        $this->user = new User;
+    }
     public function signup()
     {
         $errors = [];
@@ -10,13 +15,12 @@ class UserController
             $errors = $this->isValid($_POST);
             if (empty($errors)) {
                 $email = $_POST['email'];
-                $user = new User();
-                if ($user->exists($email)) {
+                if ($this->user->exists($email)) {
                     $errors['email'] = "Такой e-mail уже существует";
                 } else {
                     $password = $_POST['password'];
                     $hash = password_hash($password, PASSWORD_DEFAULT);
-                    $user->save($_POST['name'], $email, $hash);
+                    $this->user->save($_POST['name'], $email, $hash);
                     session_start();
                     header('Location: /login');
                 }
@@ -39,8 +43,7 @@ class UserController
             $errors = $this->isValidLogin($_POST);
             if (empty($errors)) {
                 $password = $_POST['password'];
-                $user = new User();
-                $userData = $user->get($_POST['email']);
+                $userData = $this->user->get($_POST['email']);
                 if (empty($userData)) {
                     $errors['email'] = 'Пользователь не зарегестрирован c таким email';
                 } elseif (!empty($userData) && (password_verify($password, $userData['password']))) {
