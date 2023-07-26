@@ -14,13 +14,11 @@ return false;
 $routes = require_once './../Config/routes.php';
 $requestUri = $_SERVER['REQUEST_URI'];
 if(isset($routes[$requestUri])) {
-    list($class, $method) = $routes[$requestUri];
+    [$class, $method] = $routes[$requestUri];
     $obj = new $class();
     $result = $obj->$method();
-    $viewName = $result['view'];
-    $data = $result['data'];
-    extract($data);
-    require_once "./../View/$viewName.phtml";
+    extract($result['data']);
+    require_once "./../View/{$result['view']}.phtml";
 } else {
     require_once '../View/notFound.html';
 }
