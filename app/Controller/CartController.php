@@ -3,7 +3,8 @@ namespace App\Controller;
 use App\Model\Cart;
 class CartController
 {
-    public function addProduct(){
+    public function addProduct()
+    {
         session_start();
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
@@ -19,7 +20,8 @@ class CartController
             }
         }
     }
-    private function isValidAddProduct(array $data) :array{
+    private function isValidAddProduct(array $data) :array
+    {
         $errors = [];
         if (!is_numeric($data['user_id'])) {
             $errors[] = "Неверное значение user_id";
@@ -34,13 +36,19 @@ class CartController
         }
         return  $errors;
     }
-    public function getCart(){
+    public function getCart()
+    {
         session_start();
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
         }
         $carts = new Cart();
         $result = $carts->getDescription($_SESSION['user_id']);
-        require_once '../View/getCart.phtml';
+        return [
+            'view' => 'getCart',
+            'data' => [
+                'result' => $result
+            ]
+        ];
     }
 }

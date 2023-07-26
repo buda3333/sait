@@ -1,25 +1,24 @@
 <?php
 namespace App\Controller;
 use App\Model\User;
-class UserController {
-    public function signup() {
+class UserController
+{
+    public function signup()
+    {
+        $errors = [];
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-
             $errors = $this->isValid($_POST);
-
             if (empty($errors)) {
-
-                session_start();
-                header('Location: /login');
-
                 $email = $_POST['email'];
                 $user = new User();
                 if ($user->exists($email)) {
-                    $errors['email'] = "Email already exists";
+                    $errors['email'] = "Такой e-mail уже существует";
                 } else {
                     $password = $_POST['password'];
                     $hash = password_hash($password, PASSWORD_DEFAULT);
                     $user->save($_POST['name'], $email, $hash);
+                    session_start();
+                    header('Location: /login');
                 }
             }
         }
@@ -27,9 +26,15 @@ class UserController {
         if (isset($_SESSION['user_id'])) {
             header('Location: /main');
         }
-        require_once '../View/signup.html';
+        return [
+            'view' => 'signup',
+            'data' => ['errors' => $errors]
+        ];
     }
-    public function login(){
+    public function login()
+    {
+        $errors = [];
+        $errorsLogin = [];
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $errors = $this->isValidLogin($_POST);
             if (empty($errors)) {
@@ -49,18 +54,23 @@ class UserController {
                 }
             }
         }
-        require_once '../View/login.html';
+        return [
+            'view' => 'login',
+            'data' => [
+                'errors' => $errors,
+                'errorsLogin' => $errorsLogin
+            ]
+        ];
     }
     public function logout()
     {
         session_start();
-
         unset($_SESSION['user_id']);
         header('Location: /login');
     }
-    private function isValid(array $data) :array {
+    private function isValid(array $data) :array
+    {
         $errors = [];
-
         if (!isset($data['name'])) {
             $errors['name'] = 'name is required';
         } elseif (empty($data['name'])) {
@@ -90,7 +100,8 @@ class UserController {
         }
         return $errors;
     }
-    private function isValidLogin(array $data) :array {
+    private function isValidLogin(array $data) :array
+    {
         $errors = [];
 
         if (!isset($data['email'])) {
