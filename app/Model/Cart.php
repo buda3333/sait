@@ -23,4 +23,9 @@ class Cart
         $stmt->execute(['user_id' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function deleteAll(int $userId): void
+    {
+        $stmt = $this->conn->prepare('DELETE FROM carts WHERE user_id = :user_id');
+        $stmt->execute(['user_id' => $userId]);
+    }
 }

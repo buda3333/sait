@@ -13,14 +13,15 @@ class CartController
             $errors = $this->isValidAddProduct(['user_id' => $_SESSION['user_id'], 'product_id' => $_POST['product_id'], 'quantity' => $_POST['quantity']]);
             if (empty($errors)) {
                 $carts = new Cart();
-                $carts->addProduct($_SESSION['user_id'], $_POST['product_id'],$_POST['quantity']);
+                $carts->addProduct($_SESSION['user_id'], $_POST['product_id'], $_POST['quantity']);
                 header('Location: /main');
-            }else {
+            } else {
                 header('Location: /notFound');
             }
         }
     }
-    private function isValidAddProduct(array $data) :array
+
+    private function isValidAddProduct(array $data): array
     {
         $errors = [];
         if (!is_numeric($data['user_id'])) {
@@ -34,8 +35,9 @@ class CartController
         if (!is_numeric($data['quantity'])) {
             $errors[] = "Неверное значение quantity";
         }
-        return  $errors;
+        return $errors;
     }
+
     public function getCart()
     {
         session_start();
@@ -51,4 +53,15 @@ class CartController
             ]
         ];
     }
+    public function deleteAll()
+    {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+        }
+                $carts = new Cart();
+                $carts->deleteAll($_SESSION['user_id']);
+                header('Location: /getCart');
+        }
+
 }
