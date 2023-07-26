@@ -8,13 +8,14 @@ class MainController
     {
         $this->product = new Product;
     }
- public function main()
- {
-     session_start();
-     if (!isset($_SESSION['user'])) {
+        public function main()
+        {
+         session_start();
+          if (!isset($_SESSION['user'])) {
 
          $products = $this->product->getAll();
          $username = $_SESSION['email'];
+
          return [
              'view' => 'main',
              'data' => [
@@ -22,8 +23,8 @@ class MainController
                  'username' => $username
              ]
          ];
-     } else {
-         header('Location: /login');
-     }
+          } else {
+          header('Location: /login');
+          }
  }
 }

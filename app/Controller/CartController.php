@@ -15,9 +15,19 @@ class CartController
             header('Location: /login');
         }
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            $errors = $this->isValidAddProduct(['user_id' => $_SESSION['user_id'], 'product_id' => $_POST['product_id'], 'quantity' => $_POST['quantity']]);
+            $errors = $this->isValidAddProduct
+            ([
+                'user_id' => $_SESSION['user_id'],
+                'product_id' => $_POST['product_id'],
+                'quantity' => $_POST['quantity']
+            ]);
             if (empty($errors)) {
-                $this->carts->addProduct($_SESSION['user_id'], $_POST['product_id'], $_POST['quantity']);
+                $this->carts->addProduct
+                (
+                    $_SESSION['user_id'],
+                    $_POST['product_id'],
+                    $_POST['quantity']
+                );
                 header('Location: /main');
             } else {
                 header('Location: /notFound');
