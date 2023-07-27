@@ -15,21 +15,28 @@ class UserController
             $errors = $this->isValid($_POST);
             if (empty($errors)) {
                 $email = $_POST['email'];
-                if ($this->user->exists($email)) {
+                $user = $this->user->getUserByEmail($email);
+                if (!empty($user)) {
                     $errors['email'] = "Такой e-mail уже существует";
                 } else {
+                    $name = $_POST['name'];
                     $password = $_POST['password'];
                     $hash = password_hash($password, PASSWORD_DEFAULT);
-                    $this->user->save($_POST['name'], $email, $hash);
+                    $user = new User($name, $email, $hash);
+                    $user->save();
                     session_start();
                     header('Location: /login');
+                    exit;
                 }
             }
         }
+
         session_start();
         if (isset($_SESSION['user_id'])) {
             header('Location: /main');
+            exit;
         }
+
         return [
             'view' => 'signup',
             'data' => ['errors' => $errors]
@@ -43,10 +50,10 @@ class UserController
             $errors = $this->isValidLogin($_POST);
             if (empty($errors)) {
                 $password = $_POST['password'];
-                $userData = $this->user->get($_POST['email']);
+                $user = $this->user->get($_POST['email']);
                 if (empty($userData)) {
                     $errors['email'] = 'Пользователь не зарегестрирован c таким email';
-                } elseif (!empty($userData) && (password_verify($password, $userData['password']))) {
+                } elseif (!empty($userData) && (password_verify($password, $user->getPassword()))) {
                     session_start();
                     $_SESSION['user_id'] = $userData['id'];
                     $_SESSION['email'] = $userData['email'];

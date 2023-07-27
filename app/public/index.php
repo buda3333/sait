@@ -16,14 +16,15 @@ spl_autoload_register(function ($class) {
 $routes = require_once './../Config/routes.php';
 
 $requestUri = $_SERVER['REQUEST_URI'];
-
 if(isset($routes[$requestUri])) {
     list($class, $method) = $routes[$requestUri];
 
     $obj = new $class();
+
     $result = $obj->$method();
 
     $viewName = $result['view'];
+
     $data = $result['data'];
 
     extract($data);
