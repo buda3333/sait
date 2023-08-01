@@ -14,7 +14,7 @@ class MainController
           if (!isset($_SESSION['user'])) {
 
          $products = $this->product->getAll();
-         $username = $_SESSION['email'];
+         $username = $_SESSION['user_id']['email'];
 
          return [
              'view' => 'main',

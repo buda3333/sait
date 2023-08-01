@@ -3,44 +3,40 @@ namespace App\Controller;
 use App\Model\User;
 class UserController
 {
-    private User $user;
-    public function __construct()
-    {
-        $this->user = new User;
-    }
-    public function signup()
+    public function signup(): array
     {
         $errors = [];
+
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            $errors = $this->isValid($_POST);
+            $errors = $this->isValidSign($_POST);
+
             if (empty($errors)) {
-                $email = $_POST['email'];
-                $user = $this->user->getUserByEmail($email);
+
+                $user = User::getUserEmail($_POST['email']);
                 if (!empty($user)) {
                     $errors['email'] = "Такой e-mail уже существует";
                 } else {
-                    $name = $_POST['name'];
-                    $password = $_POST['password'];
-                    $hash = password_hash($password, PASSWORD_DEFAULT);
-                    $user = new User($name, $email, $hash);
-                    $user->save();
                     session_start();
                     header('Location: /login');
-                    exit;
+
+                    $password = $_POST['password'];
+                    $hash = password_hash($password, PASSWORD_DEFAULT);
+                    $user = new User($_POST['name'], $_POST['email'], $hash);
+                    $user->save();
                 }
             }
         }
+            session_start();
 
-        session_start();
-        if (isset($_SESSION['user_id'])) {
-            header('Location: /main');
-            exit;
-        }
-
-        return [
-            'view' => 'signup',
-            'data' => ['errors' => $errors]
-        ];
+            if (isset($_SESSION['user_id'])) {
+                header('Location: /main');
+            }
+            return [
+                'view' => 'signup',
+                'data' => [
+                    'errors' => $errors
+                ]
+            ];
     }
     public function login()
     {
@@ -50,14 +46,14 @@ class UserController
             $errors = $this->isValidLogin($_POST);
             if (empty($errors)) {
                 $password = $_POST['password'];
-                $user = $this->user->get($_POST['email']);
-                if (empty($userData)) {
+
+                $user = User::getUserEmail($_POST['email']);
+
+                if (empty($user)) {
                     $errors['email'] = 'Пользователь не зарегестрирован c таким email';
-                } elseif (!empty($userData) && (password_verify($password, $user->getPassword()))) {
+                } elseif (!empty($user) && (password_verify($password, $user->getPassword()))) {
                     session_start();
-                    $_SESSION['user_id'] = $userData['id'];
-                    $_SESSION['email'] = $userData['email'];
-                    //setcookie('username',$userData['name'], time() + 3600); // Срок действия: 1 час
+                    $_SESSION['user_id'] = ['id' => $user->getId(), 'email' => $user->getEmail(), 'name' => $user->getName()];
                     header('Location: /main');
                 } else {
                     $errorsLogin['errors'] = '* Неверный пароль';
@@ -78,7 +74,7 @@ class UserController
         unset($_SESSION['user_id']);
         header('Location: /login');
     }
-    private function isValid(array $data) :array
+    private function isValidSign(array $data) :array
     {
         $errors = [];
         if (!isset($data['name'])) {
