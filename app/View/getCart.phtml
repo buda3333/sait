@@ -11,11 +11,16 @@
                         <th>Количество</th>
                         <th>Общая сумма</th>
                     </tr>
-                    <?php foreach ($result as $res):?>
+                    <?php foreach ($result as $res): ?>
                         <tr>
                             <td><?php echo $res['name']; ?></td>
                             <td><?php echo $res['quantity']; ?></td>
                             <td><?php echo $res['total_price']; ?></td>
+                            <td>
+                                <form method="post" action="/deleteProduct()">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </table>

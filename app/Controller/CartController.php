@@ -74,5 +74,20 @@ class CartController
         $products->clearCart();
                 header('Location: /getCart');
         }
+    public function deleteProduct(): void
+    {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            return;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $product = new Cart($_SESSION['user_id']['id']);
+
+            $product->deleteProduct();
+            header('Location: /getCart');
+        }
+    }
+
 
 }

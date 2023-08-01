@@ -12,5 +12,6 @@ return [
     '/main' => [MainController::class, 'main'],
     '/addProduct' => [CartController::class, 'addProduct'],
     '/getCart' => [CartController::class, 'getCart'],
-    '/clearCart' => [CartController::class, 'clearCart']
+    '/clearCart' => [CartController::class, 'clearCart'],
+    '/deleteProduct' => [CartController::class, 'deleteProduct']
 ];

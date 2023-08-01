@@ -53,4 +53,9 @@ class Cart
         $stmt = ConnectFactory::create()->prepare('DELETE FROM carts WHERE user_id = :user_id');
         $stmt->execute(['user_id' => $this->userID]);
     }
+    public function deleteProduct(): void
+    {
+        $stmt = ConnectFactory::create()->prepare('DELETE FROM carts WHERE user_id = :user_id AND product_id = :product_id');
+        $stmt->execute(['user_id' => $this->userID, 'product_id' => $this->getProductID()]);
+    }
 }
